@@ -21,10 +21,16 @@ export default function UserDashboard() {
       <h1 className="text-2xl font-bold mb-4">User Dashboard</h1>
 
       <p>
-        Welcome <span className="font-semibold">{session.user.name}</span>!
+        Welcome <span className="font-semibold">{session.user?.name}</span>!
       </p>
       <p>
-        Role: <span className="font-semibold">{session.user.role}</span>
+        Role: <span className="font-semibold">{session.user?.role}</span>
+      </p>
+      <p>
+        Role: <span className="font-semibold">{session.user?.email}</span>
+      </p>
+      <p>
+        Role: <span className="font-semibold">{session.user?.id}</span>
       </p>
 
       <button
