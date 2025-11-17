@@ -2,6 +2,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Database setup
+
+- Runtime Prisma Client calls use Supabase's PgBouncer endpoint (`6543`) as defined inside `prisma/schema.prisma`.
+- CLI operations (generate, migrate, db push) leverage the direct Postgres endpoint (`5432`) configured in `prisma.config.ts` to avoid PgBouncer prepared statement issues.
+- Update both constants if you rotate the Supabase password or change projects before running `npx prisma db push`.
+
 First, run the development server:
 
 ```bash

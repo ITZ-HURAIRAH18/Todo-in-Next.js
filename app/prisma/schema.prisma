@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = "postgresql://postgres.ergfhfaktunqnwyttebt:fLfXx6Ff-iX$wce@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+  directUrl = "postgresql://postgres.ergfhfaktunqnwyttebt:fLfXx6Ff-iX$wce@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres"
+}
+model User {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  todos     Todo[]
+  createdAt DateTime @default(now())
+}
+
+model Todo {
+  id        String   @id @default(uuid())
+  title     String
+  completed Boolean  @default(false)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
