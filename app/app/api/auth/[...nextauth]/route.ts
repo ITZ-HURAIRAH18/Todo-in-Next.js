@@ -1,14 +1,16 @@
+// app/api/auth/[...nextauth]/route.ts
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+// NextAuth configuration
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
 
   session: {
-    strategy: "jwt",
+    strategy: "jwt", // use JWT-based session
   },
 
   providers: [
@@ -24,6 +26,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Email & password required");
         }
 
+        // Find user in the database
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
@@ -32,15 +35,13 @@ export const authOptions: NextAuthOptions = {
           throw new Error("No user found with this email");
         }
 
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-
+        // Compare password with hashed password
+        const isValid = await bcrypt.compare(credentials.password, user.password);
         if (!isValid) {
           throw new Error("Invalid password");
         }
 
+        // Return user object for JWT
         return {
           id: user.id,
           email: user.email,
@@ -52,30 +53,33 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
+    // Add user info to JWT token
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.name = user.name;
         token.role = user.role;
       }
       return token;
     },
 
+    // Add token info to session object
     async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
+      if (session.user) {
+        session.user.id = token.id as string | undefined;
+        session.user.name = token.name ?? session.user.name;
+        session.user.role = token.role as string | undefined;
       }
       return session;
     },
   },
-
   pages: {
-    signIn: "/login",
+    signIn: "/auth/login", // custom login page
   },
 
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET, // required for JWT signing
 };
 
+// Next.js App Router: export GET and POST handlers
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

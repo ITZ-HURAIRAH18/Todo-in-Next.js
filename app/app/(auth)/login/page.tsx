@@ -37,7 +37,7 @@ export default function LoginPage() {
     if (res?.error) {
       alert(res.error);
     } else {
-      router.push("/user/dashboard");
+      router.push("/dashboard");
     }
   };
 
