@@ -37,7 +37,7 @@ export default function RegisterPage() {
 
     if (res.ok) {
       alert("Signup successful!");
-      router.push("/auth/login");
+      router.push("/login");
     } else {
       const errorMsg = await res.text();
       alert(errorMsg);
