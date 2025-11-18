@@ -2,7 +2,19 @@
 
 import { useState } from "react";
 
-export default function TodoItem({ todo, onUpdate }) {
+type Todo = {
+  id: string;
+  title: string;
+  description?: string | null;
+  completed: boolean;
+};
+
+type TodoItemProps = {
+  todo: Todo;
+  onUpdate: () => Promise<void>;
+};
+
+export default function TodoItem({ todo, onUpdate }: TodoItemProps) {
   const [completed, setCompleted] = useState(todo.completed);
 
   // For editing
@@ -18,12 +30,12 @@ export default function TodoItem({ todo, onUpdate }) {
     });
 
     setCompleted(!completed);
-    onUpdate();
+    await onUpdate();
   };
 
   const deleteTodo = async () => {
     await fetch(`/api/todo/${todo.id}`, { method: "DELETE" });
-    onUpdate();
+    await onUpdate();
   };
 
   const saveEdit = async () => {
@@ -37,7 +49,7 @@ export default function TodoItem({ todo, onUpdate }) {
     });
 
     setIsEditing(false);
-    onUpdate();
+    await onUpdate();
   };
 
   return (

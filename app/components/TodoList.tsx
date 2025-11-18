@@ -3,13 +3,26 @@
 import { useState, useEffect } from "react";
 import TodoItem from "./TodoItem";
 
-function TodoList({ initialTodos }) {
-  const [todos, setTodos] = useState(initialTodos);
+type Todo = {
+  id: string;
+  title: string;
+  description?: string | null;
+  completed: boolean;
+};
+
+type TodoListProps = {
+  initialTodos: Todo[];
+};
+
+function TodoList({ initialTodos }: TodoListProps) {
+  const [todos, setTodos] = useState<Todo[]>(initialTodos);
   const [title, setTitle] = useState("");
   const [search, setSearch] = useState("");
 
   const fetchTodos = async () => {
-    const res = await fetch(`/api/todo?search=${search}`);
+    const res = await fetch(`/api/todo?search=${encodeURIComponent(search)}`, {
+      cache: "no-store",
+    });
     const data = await res.json();
     setTodos(data);
   };
