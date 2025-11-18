@@ -31,9 +31,5 @@ export async function POST(req: Request) {
     },
   });
 
-  // ✅ Revalidate the todos page after adding
-  revalidatePath("/todos");
-
   return new Response(JSON.stringify(todo), { status: 201 });
 }
-

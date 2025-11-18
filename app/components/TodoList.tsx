@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import TodoItem from "./TodoItem";
 import Loading from "../app/loading";
-
+import { useRouter } from "next/navigation";
 type Todo = {
   id: string;
   title: string;
@@ -20,6 +20,7 @@ export default function TodoList({ initialTodos = [] }: TodoListProps) {
   const [loading, setLoading] = useState(!initialTodos.length);
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
+const router = useRouter();
 
   const fetchTodos = async () => {
     setLoading(true);
@@ -38,7 +39,7 @@ export default function TodoList({ initialTodos = [] }: TodoListProps) {
     }
   };
 
-  const addTodo = async () => {
+const addTodo = async () => {
   if (!newTitle.trim()) return alert("Title is required");
 
   const res = await fetch("/api/todo", {
@@ -55,7 +56,9 @@ export default function TodoList({ initialTodos = [] }: TodoListProps) {
 
   setNewTitle("");
   setNewDesc("");
-  // ❌ No need to call fetchTodos() anymore
+
+  // ❌ Instead of router.refresh(), call fetchTodos
+  await fetchTodos();
 };
 
 
