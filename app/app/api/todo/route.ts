@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 import prisma from "@/lib/prisma";
-
+import { revalidatePath } from "next/cache";
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return new Response("Unauthorized", { status: 401 });
@@ -15,19 +15,24 @@ export async function GET(req: Request) {
   return new Response(JSON.stringify(todos), { status: 200 });
 }
 
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return new Response("Unauthorized", { status: 401 });
 
   const body = await req.json();
+
   const todo = await prisma.todo.create({
     data: {
       title: body.title,
       description: body.description,
-      category: body.category,
+      category: body.category || null,
       userId: session.user.id,
     },
   });
+
+  // ✅ Revalidate the todos page after adding
+  revalidatePath("/todos");
 
   return new Response(JSON.stringify(todo), { status: 201 });
 }

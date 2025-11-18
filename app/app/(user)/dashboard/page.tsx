@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-
+import Loading from "@/app/loading";
 export default function UserDashboard() {
   const router = useRouter();
   const { data: session } = useSession();
@@ -12,7 +12,7 @@ export default function UserDashboard() {
     router.push("/login");
   };
 
-  if (!session) return <p>Loading...</p>;
+  if (!session) return <Loading />;
 
   return (
     <div className="p-6">
