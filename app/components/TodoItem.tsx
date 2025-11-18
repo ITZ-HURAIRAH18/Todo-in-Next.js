@@ -16,29 +16,35 @@ type TodoItemProps = {
 
 export default function TodoItem({ todo, onUpdate }: TodoItemProps) {
   const [completed, setCompleted] = useState(todo.completed);
-
+console.log("TodoItem rendered for:", todo.id);
   // For editing
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDesc, setEditDesc] = useState(todo.description || "");
 
+  // Toggle completed
   const toggleComplete = async () => {
     await fetch(`/api/todo/${todo.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ completed: !completed }),
     });
-
     setCompleted(!completed);
     await onUpdate();
+
+
   };
 
+  // Delete Todo
   const deleteTodo = async () => {
     await fetch(`/api/todo/${todo.id}`, { method: "DELETE" });
     await onUpdate();
   };
 
+  // Save Edits
   const saveEdit = async () => {
+    if (!editTitle.trim()) return alert("Title cannot be empty");
+
     await fetch(`/api/todo/${todo.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -57,8 +63,10 @@ export default function TodoItem({ todo, onUpdate }: TodoItemProps) {
       {/* Todo Item Display */}
       <div className="p-4 border rounded flex justify-between items-center">
         <div>
-          <h3 className={completed ? "line-through" : ""}>{todo.title}</h3>
-          {todo.description && <p>{todo.description}</p>}
+          <h3 className={completed ? "line-through text-gray-400" : ""}>
+            {todo.title}
+          </h3>
+          {todo.description && <p className="text-gray-600">{todo.description}</p>}
         </div>
 
         <div className="flex gap-2">
@@ -89,7 +97,7 @@ export default function TodoItem({ todo, onUpdate }: TodoItemProps) {
 
       {/* Edit Modal */}
       {isEditing && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 w-96 rounded shadow-lg space-y-4">
             <h2 className="text-lg font-bold">Edit Todo</h2>
 

@@ -32,18 +32,3 @@ export async function POST(req: Request) {
   return new Response(JSON.stringify(todo), { status: 201 });
 }
 
-export async function PATCH(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) return new Response("Unauthorized", { status: 401 });
-
-  const body = await req.json();
-  const { id, completed, deleted, title, description, category } = body;
-
-  const todo = await prisma.todo.update({
-    where: { id },
-    data: { completed, deleted, title, description, category },
-  });
-
-  return new Response(JSON.stringify(todo), { status: 200 });
-}
-
