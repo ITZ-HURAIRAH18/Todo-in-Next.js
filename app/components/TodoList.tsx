@@ -16,10 +16,21 @@ export default function TodoList() {
 
   const fetchTodos = async () => {
     setLoading(true);
-    const res = await fetch("/api/todo");
-    const data = await res.json();
-    setTodos(data);
-    setLoading(false);
+    try {
+      const res = await fetch("/api/todo", { credentials: "include", cache: "no-store" });
+      if (!res.ok) {
+        console.error("Failed to fetch todos", await res.text());
+        setTodos([]);
+        return;
+      }
+      const data = await res.json();
+      setTodos(data);
+    } catch (error) {
+      console.error("Unexpected error fetching todos", error);
+      setTodos([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

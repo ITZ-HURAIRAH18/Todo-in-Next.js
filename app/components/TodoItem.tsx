@@ -16,7 +16,6 @@ type TodoItemProps = {
 
 export default function TodoItem({ todo, onUpdate }: TodoItemProps) {
   const [completed, setCompleted] = useState(todo.completed);
-console.log("TodoItem rendered for:", todo.id);
   // For editing
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
@@ -24,20 +23,34 @@ console.log("TodoItem rendered for:", todo.id);
 
   // Toggle completed
   const toggleComplete = async () => {
-    await fetch(`/api/todo/${todo.id}`, {
+    const res = await fetch(`/api/todo/${todo.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ completed: !completed }),
     });
+
+    if (!res.ok) {
+      console.error("Failed to toggle todo", await res.text());
+      return;
+    }
+
     setCompleted(!completed);
     await onUpdate();
-
-
   };
 
   // Delete Todo
   const deleteTodo = async () => {
-    await fetch(`/api/todo/${todo.id}`, { method: "DELETE" });
+    const res = await fetch(`/api/todo/${todo.id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      console.error("Failed to delete todo", await res.text());
+      return;
+    }
+
     await onUpdate();
   };
 
@@ -45,14 +58,20 @@ console.log("TodoItem rendered for:", todo.id);
   const saveEdit = async () => {
     if (!editTitle.trim()) return alert("Title cannot be empty");
 
-    await fetch(`/api/todo/${todo.id}`, {
+    const res = await fetch(`/api/todo/${todo.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({
         title: editTitle,
         description: editDesc,
       }),
     });
+
+    if (!res.ok) {
+      console.error("Failed to save todo", await res.text());
+      return;
+    }
 
     setIsEditing(false);
     await onUpdate();
