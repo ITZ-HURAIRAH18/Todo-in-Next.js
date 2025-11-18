@@ -5,16 +5,14 @@ import { signOut, useSession } from "next-auth/react";
 
 export default function UserDashboard() {
   const router = useRouter();
-  const { data: session } = useSession(); // get session data
+  const { data: session } = useSession();
 
   const handleLogout = async () => {
-    await signOut({ redirect: false }); // prevent automatic redirect
-    router.push("/login"); // redirect manually
+    await signOut({ redirect: false });
+    router.push("/login");
   };
 
-  if (!session) {
-    return <p>Loading...</p>; // optional: show loading while session is fetched
-  }
+  if (!session) return <p>Loading...</p>;
 
   return (
     <div className="p-6">
@@ -23,22 +21,22 @@ export default function UserDashboard() {
       <p>
         Welcome <span className="font-semibold">{session.user?.name}</span>!
       </p>
-      <p>
-        Role: <span className="font-semibold">{session.user?.role}</span>
-      </p>
-      <p>
-        Role: <span className="font-semibold">{session.user?.email}</span>
-      </p>
-      <p>
-        Role: <span className="font-semibold">{session.user?.id}</span>
-      </p>
 
-      <button
-        onClick={handleLogout}
-        className="mt-6 bg-red-600 text-white p-2 rounded hover:bg-red-700"
-      >
-        Logout
-      </button>
+      <div className="mt-6 flex gap-3">
+        <button
+          onClick={() => router.push("/todos")}
+          className="bg-blue-600 text-white p-2 rounded"
+        >
+          Go to Todos
+        </button>
+
+        <button
+          onClick={handleLogout}
+          className="bg-red-600 text-white p-2 rounded"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,23 +1,10 @@
-// components/TodoList.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import TodoItem from "./TodoItem";
 
-interface Todo {
-  id: string;
-  title: string;
-  description?: string;
-  completed: boolean;
-  category?: string;  
-}
-
-interface Props {
-  initialTodos: Todo[];
-}
-
-function TodoList({ initialTodos }: Props) {
-  const [todos, setTodos] = useState<Todo[]>(initialTodos);
+function TodoList({ initialTodos }) {
+  const [todos, setTodos] = useState(initialTodos);
   const [title, setTitle] = useState("");
   const [search, setSearch] = useState("");
 
@@ -28,11 +15,11 @@ function TodoList({ initialTodos }: Props) {
   };
 
   const addTodo = async () => {
-    if (!title) return;
+    if (!title.trim()) return;
     await fetch("/api/todo", {
       method: "POST",
-      body: JSON.stringify({ title }),
       headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title }),
     });
     setTitle("");
     fetchTodos();
@@ -44,29 +31,30 @@ function TodoList({ initialTodos }: Props) {
 
   return (
     <div>
-      <div className="mb-4 flex gap-2">
-        <input
-          type="text"
-          placeholder="Search todos..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 rounded flex-1"
-        />
-      </div>
+      {/* Search */}
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search todos..."
+        className="border p-2 mb-4 w-full rounded"
+      />
 
-      <div className="mb-4 flex gap-2">
+      {/* Add Todo */}
+      <div className="flex gap-2 mb-4">
         <input
           type="text"
           placeholder="New todo"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="border p-2 rounded flex-1"
+          className="border p-2 flex-1 rounded"
         />
-        <button onClick={addTodo} className="bg-blue-500 text-white p-2 rounded">
+        <button onClick={addTodo} className="bg-blue-600 text-white p-2 rounded">
           Add
         </button>
       </div>
 
+      {/* List */}
       <div className="space-y-2">
         {todos.map((todo) => (
           <TodoItem key={todo.id} todo={todo} onUpdate={fetchTodos} />
