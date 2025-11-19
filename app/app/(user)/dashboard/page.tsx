@@ -3,6 +3,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 import LogoutButton from "@/components/LogoutButton";
 
 export default async function UserDashboard() {
@@ -34,57 +35,44 @@ export default async function UserDashboard() {
   const recentTodos = todos.slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-              <p className="text-gray-600 text-sm">
-                Welcome back, <span className="font-semibold text-blue-600">{session.user?.name}</span>!
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Link
-                href="/todos"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors inline-block"
-              >
-                📝 Manage Todos
-              </Link>
-              <LogoutButton />
-            </div>
+    <>
+      <Navbar user={session.user} />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 transition-colors">
+        <div className="max-w-5xl mx-auto">
+          {/* Welcome Header */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Welcome back, {session.user?.name}!</h1>
+            <p className="text-gray-600 dark:text-gray-300">Here's an overview of your todo activity</p>
           </div>
-        </div>
 
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-          <Link href="/todos" className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow block">
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          <Link href="/todos" className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow block">
             <div className="text-center">
               <div className="text-3xl mb-2">📋</div>
-              <p className="text-2xl font-bold text-gray-900">{todos.length}</p>
-              <p className="text-sm text-gray-600">Total Todos</p>
-              <p className="text-xs text-blue-600 mt-1">Click to manage →</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{todos.length}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Total Todos</p>
+              <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">Click to manage →</p>
             </div>
           </Link>
 
-          <div className="bg-white rounded-lg shadow-sm p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
             <div className="text-center">
               <div className="text-3xl mb-2">✅</div>
-              <p className="text-2xl font-bold text-green-600">{completed}</p>
-              <p className="text-sm text-gray-600">Completed</p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400">{completed}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Completed</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {todos.length > 0 ? Math.round((completed / todos.length) * 100) : 0}% done
               </p>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-sm p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
             <div className="text-center">
               <div className="text-3xl mb-2">⏳</div>
-              <p className="text-2xl font-bold text-orange-600">{pending}</p>
-              <p className="text-sm text-gray-600">Pending</p>
-              <p className="text-xs text-gray-500 mt-1">Need attention</p>
+              <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{pending}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Pending</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Need attention</p>
             </div>
           </div>
         </div>
@@ -200,5 +188,6 @@ export default async function UserDashboard() {
         </div>
       </div>
     </div>
+    </>
   );
 }
