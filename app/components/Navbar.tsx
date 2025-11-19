@@ -35,8 +35,8 @@ export default function Navbar({ user }: NavbarProps) {
   };
 
   const navItems = [
-    { name: "Dashboard", href: "/dashboard", icon: "📊" },
-    { name: "Todos", href: "/todos", icon: "📋" },
+    { name: "Dashboard", href: "/user/dashboard", icon: "📊" },
+    { name: "Todos", href: "/user/todos", icon: "📋" },
   ];
 
   return (
