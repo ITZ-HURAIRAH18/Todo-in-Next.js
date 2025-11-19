@@ -7,6 +7,7 @@ export default function TodoForm() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
 
   const addTodo = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +22,7 @@ export default function TodoForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ title, description }),
+        body: JSON.stringify({ title, description, category }),
       });
 
       if (!res.ok) {
@@ -33,6 +34,7 @@ export default function TodoForm() {
 
       setTitle("");
       setDescription("");
+      setCategory("");
       router.refresh(); // 🔥 refresh server data
     } catch (error) {
       console.error("Error adding todo:", error);
@@ -41,33 +43,43 @@ export default function TodoForm() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">📝 Add Todo</h2>
+    <div className="max-w-3xl mx-auto p-4">
+      <h2 className="text-xl font-bold mb-3 text-center">📝 Add Todo</h2>
 
       <form
         onSubmit={addTodo}
-        className="grid grid-cols-1 gap-4 bg-white shadow-lg p-6 rounded-xl"
+        className="bg-white shadow-lg p-4 rounded-xl space-y-3"
       >
-        <input
-          className="border p-3 rounded-lg"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Todo Title"
-        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <input
+            className="border p-2 rounded-lg"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Todo Title"
+          />
+
+          <input
+            className="border p-2 rounded-lg"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Category (optional)"
+          />
+
+          <button
+            type="submit"
+            className="bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700"
+          >
+            Add Todo
+          </button>
+        </div>
 
         <textarea
-          className="border p-3 rounded-lg"
+          className="border p-2 rounded-lg w-full"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
+          placeholder="Description (optional)"
+          rows={2}
         />
-
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-3 rounded-lg"
-        >
-          Add Todo
-        </button>
       </form>
     </div>
   );
