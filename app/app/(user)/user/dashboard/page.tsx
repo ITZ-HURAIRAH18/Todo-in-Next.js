@@ -120,7 +120,7 @@ export default async function UserDashboard() {
                   ) : (
                     <div className="text-center py-6">
                       <p className="text-muted-foreground mb-3">No todos yet.</p>
-                      <Link href="/todos" className="inline-block bg-primary text-primary-foreground px-3 py-2 rounded-md text-sm hover:opacity-90 transition">
+                      <Link href="/user/todos" className="inline-block bg-primary text-primary-foreground px-3 py-2 rounded-md text-sm hover:opacity-90 transition">
                         Create your first todo
                       </Link>
                     </div>
@@ -148,7 +148,7 @@ export default async function UserDashboard() {
                   ) : (
                     <div className="text-center py-6">
                       <p className="text-muted-foreground mb-3">No categories yet.</p>
-                      <Link href="/todos" className="inline-block bg-primary text-primary-foreground px-3 py-2 rounded-md text-sm hover:opacity-90 transition">
+                      <Link href="/user/todos" className="inline-block bg-primary text-primary-foreground px-3 py-2 rounded-md text-sm hover:opacity-90 transition">
                         Add categories
                       </Link>
                     </div>
