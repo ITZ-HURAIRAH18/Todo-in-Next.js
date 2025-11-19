@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -44,18 +44,31 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: data.email,
-      password: data.password,
-    });
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
 
-    setLoading(false);
+      if (res?.error) {
+        alert(res.error);
+        return;
+      }
 
-    if (res?.error) {
-      alert(res.error);
-    } else {
-      router.push("/dashboard");
+      const session = await getSession();
+      const role = session?.user?.role;
+
+      if (role === "admin" || role === "ADMIN" || role === "Admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/user/dashboard");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Unable to sign in. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,7 +128,7 @@ export default function LoginPage() {
         <div className="text-center pt-4 border-t border-border">
           <p className="text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link href="/register" className="text-primary hover:underline font-medium">
+            <Link href="/auth/register" className="text-primary hover:underline font-medium">
               Sign up
             </Link>
           </p>
