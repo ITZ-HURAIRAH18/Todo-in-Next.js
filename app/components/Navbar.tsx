@@ -46,7 +46,7 @@ export default function Navbar({ user }: NavbarProps) {
           {/* Logo/Brand */}
           <div className="flex items-center">
             <Link href="/dashboard" className="text-xl font-bold text-foreground">
-              ✅ TodoApp
+               TodoApp
             </Link>
           </div>
 

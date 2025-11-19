@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface LoginForm {
   email: string;
@@ -15,8 +16,25 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-
   const [loading, setLoading] = useState<boolean>(false);
+  const [isDark, setIsDark] = useState(false);
+
+  // Theme management
+  useEffect(() => {
+    const theme = localStorage.getItem("theme");
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const shouldBeDark = theme === "dark" || (theme !== "light" && systemDark);
+    
+    setIsDark(shouldBeDark);
+    document.documentElement.classList.toggle("dark", shouldBeDark);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = isDark ? "light" : "dark";
+    setIsDark(!isDark);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", !isDark);
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -42,12 +60,28 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-4 p-6 w-[350px] border rounded-lg bg-white shadow"
+    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 dark:from-background dark:to-muted/20 flex justify-center items-center p-4">
+      {/* Theme Toggle */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+        title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       >
-        <h2 className="text-xl font-bold text-center">Login</h2>
+        {isDark ? "☀️" : "🌙"}
+      </button>
+
+      <div className="w-full max-w-md">
+        {/* Logo/Brand */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2"> TodoApp</h1>
+          <p className="text-muted-foreground">Welcome back! Please sign in to continue.</p>
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className="bg-card border rounded-xl shadow-lg p-6 space-y-4"
+        >
+          <h2 className="text-xl font-bold text-center text-foreground mb-6">Sign In</h2>
 
         <input
           type="email"
@@ -55,7 +89,7 @@ export default function LoginPage() {
           placeholder="Email"
           value={data.email}
           onChange={handleChange}
-          className="border p-2 rounded"
+          className="w-full bg-background border border-input rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
           required
         />
 
@@ -65,18 +99,29 @@ export default function LoginPage() {
           placeholder="Password"
           value={data.password}
           onChange={handleChange}
-          className="border p-2 rounded"
+          className="w-full bg-background border border-input rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
           required
         />
 
         <button
           type="submit"
-          className="bg-blue-600 text-white p-2 rounded"
+          className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={loading}
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? "Signing in..." : "Sign In"}
         </button>
-      </form>
+        
+        {/* Register Link */}
+        <div className="text-center pt-4 border-t border-border">
+          <p className="text-sm text-muted-foreground">
+            Don't have an account?{" "}
+            <Link href="/register" className="text-primary hover:underline font-medium">
+              Sign up
+            </Link>
+          </p>
+        </div>
+        </form>
+      </div>
     </div>
   );
 }
