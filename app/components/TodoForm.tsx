@@ -44,22 +44,22 @@ export default function TodoForm() {
 
   return (
     <div className="max-w-3xl mx-auto p-4">
-      <h2 className="text-xl font-bold mb-3 text-center">📝 Add Todo</h2>
+      <h2 className="text-xl font-bold text-foreground mb-3 text-center">📝 Add Todo</h2>
 
       <form
         onSubmit={addTodo}
-        className="bg-white shadow-lg p-4 rounded-xl space-y-3"
+        className="bg-card border shadow-lg p-4 rounded-xl space-y-3"
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <input
-            className="border p-2 rounded-lg"
+            className="bg-background border border-input p-2 rounded-lg text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Todo Title"
           />
 
           <input
-            className="border p-2 rounded-lg"
+            className="bg-background border border-input p-2 rounded-lg text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             placeholder="Category (optional)"
@@ -67,14 +67,14 @@ export default function TodoForm() {
 
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700"
+            className="bg-primary text-primary-foreground py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors"
           >
             Add Todo
           </button>
         </div>
 
         <textarea
-          className="border p-2 rounded-lg w-full"
+          className="bg-background border border-input p-2 rounded-lg w-full text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description (optional)"

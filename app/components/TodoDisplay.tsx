@@ -117,7 +117,7 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
 
   if (todos.length === 0) {
     return (
-      <p className="text-gray-500 text-center py-8">
+      <p className="text-muted-foreground text-center py-8">
         No todos found. Add your first todo above!
       </p>
     );
@@ -126,7 +126,7 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
   return (
     <div className="space-y-3">
       {todos.map((todo) => (
-        <div key={todo.id} className="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+        <div key={todo.id} className="bg-card border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
           {editingId === todo.id ? (
             /* Edit Mode - Compact */
             <div className="space-y-3">
@@ -134,14 +134,14 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
                 type="text"
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
-                className="w-full border p-2 rounded text-sm font-medium"
+                className="w-full bg-background border border-input p-2 rounded text-sm font-medium text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
                 placeholder="Todo Title"
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <textarea
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
-                  className="border p-2 rounded text-sm"
+                  className="bg-background border border-input p-2 rounded text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
                   placeholder="Description"
                   rows={2}
                 />
@@ -149,20 +149,20 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
                   type="text"
                   value={editCategory}
                   onChange={(e) => setEditCategory(e.target.value)}
-                  className="border p-2 rounded text-sm"
+                  className="bg-background border border-input p-2 rounded text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
                   placeholder="Category"
                 />
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => saveEdit(todo.id)}
-                  className="px-3 py-1 bg-green-500 text-white rounded text-sm font-medium hover:bg-green-600"
+                  className="px-3 py-1 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700 transition-colors"
                 >
                   Save
                 </button>
                 <button
                   onClick={cancelEdit}
-                  className="px-3 py-1 bg-gray-500 text-white rounded text-sm font-medium hover:bg-gray-600"
+                  className="px-3 py-1 bg-secondary text-secondary-foreground rounded text-sm font-medium hover:bg-secondary/80 transition-colors"
                 >
                   Cancel
                 </button>
@@ -174,11 +174,11 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
               {/* Main Info Row */}
               <div className="flex justify-between items-start mb-2">
                 <div className="flex-1 min-w-0">
-                  <h3 className={`text-base font-semibold truncate ${todo.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                  <h3 className={`text-base font-semibold truncate ${todo.completed ? 'line-through text-muted-foreground' : 'text-card-foreground'}`}>
                     {todo.title}
                   </h3>
                   {todo.description && (
-                    <p className={`text-sm text-gray-600 mt-1 line-clamp-2 ${todo.completed ? 'line-through' : ''}`}>
+                    <p className={`text-sm text-muted-foreground mt-1 line-clamp-2 ${todo.completed ? 'line-through' : ''}`}>
                       {todo.description}
                     </p>
                   )}
@@ -193,10 +193,10 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
               </div>
 
               {/* Secondary Info Row */}
-              <div className="flex justify-between items-center text-xs text-gray-500 mb-3">
+              <div className="flex justify-between items-center text-xs text-muted-foreground mb-3">
                 <div className="flex gap-4">
                   {todo.category && (
-                    <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
+                    <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
                       📂 {todo.category}
                     </span>
                   )}
@@ -206,10 +206,10 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
               </div>
 
               {/* Action Buttons - Compact */}
-              <div className="flex gap-1 pt-2 border-t">
+              <div className="flex gap-1 pt-2 border-t border-border">
                 <button
                   onClick={() => toggleComplete(todo.id, todo.completed)}
-                  className={`px-3 py-1 rounded text-xs text-white font-medium ${
+                  className={`px-3 py-1 rounded text-xs text-white font-medium transition-colors ${
                     todo.completed 
                       ? 'bg-orange-500 hover:bg-orange-600' 
                       : 'bg-green-500 hover:bg-green-600'
@@ -219,13 +219,13 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
                 </button>
                 <button
                   onClick={() => startEdit(todo)}
-                  className="px-3 py-1 bg-blue-500 text-white rounded text-xs font-medium hover:bg-blue-600"
+                  className="px-3 py-1 bg-primary text-primary-foreground rounded text-xs font-medium hover:bg-primary/90 transition-colors"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => deleteTodo(todo.id)}
-                  className="px-3 py-1 bg-red-500 text-white rounded text-xs font-medium hover:bg-red-600"
+                  className="px-3 py-1 bg-destructive text-destructive-foreground rounded text-xs font-medium hover:bg-destructive/90 transition-colors"
                 >
                   Delete
                 </button>
