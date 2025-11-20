@@ -1,4 +1,4 @@
-"# 📋 Todo App in Next.js
+ 📋 Todo App in Next.js
 
 A modern, feature-rich Todo application built with Next.js 16, TypeScript, Prisma, and PostgreSQL. Features include user authentication, role-based access control, todo sharing, and a beautiful dark/light mode interface.
 
