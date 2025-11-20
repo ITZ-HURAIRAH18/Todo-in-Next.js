@@ -66,8 +66,8 @@ export default async function UserDashboard() {
               <div className="relative m-1">
                 <div className="bg-card rounded-xl shadow-sm border p-6">
                   <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-lg font-semibold text-card-foreground">Progress</h3>
-                    <span className="text-sm text-muted-foreground">{Math.round((completed / todos.length) * 100)}%</span>
+                    <h3 className="text-lg font-semibold text-foreground">Progress</h3>
+                    <span className="text-sm text-foreground">{Math.round((completed / todos.length) * 100)}%</span>
                   </div>
                   <div className="w-full bg-secondary rounded-full h-2.5">
                     <div
@@ -75,7 +75,7 @@ export default async function UserDashboard() {
                       style={{ width: `${(completed / todos.length) * 100}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                  <div className="flex justify-between text-xs text-foreground mt-2">
                     <span>{completed} completed</span>
                     <span>{pending} pending</span>
                   </div>
@@ -102,9 +102,9 @@ export default async function UserDashboard() {
                               {todo.title}
                             </h4>
                             {todo.description && (
-                              <p className="text-xs text-muted-foreground truncate mt-1">{todo.description}</p>
+                              <p className="text-xs text-foreground truncate mt-1">{todo.description}</p>
                             )}
-                            <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-2 mt-2 text-xs text-foreground">
                               <span>{new Date(todo.createdAt).toLocaleDateString()}</span>
                               {todo.category && (
                                 <span className="bg-primary/10 text-primary px-2 py-0.5 rounded">{todo.category}</span>
@@ -119,7 +119,7 @@ export default async function UserDashboard() {
                     </ul>
                   ) : (
                     <div className="text-center py-6">
-                      <p className="text-muted-foreground mb-3">No todos yet.</p>
+                      <p className="text-foreground mb-3">No todos yet.</p>
                       <Link href="/user/todos" className="inline-block bg-primary text-primary-foreground px-3 py-2 rounded-md text-sm hover:opacity-90 transition">
                         Create your first todo
                       </Link>
@@ -141,13 +141,13 @@ export default async function UserDashboard() {
                         .map(([category, count]) => (
                           <li key={category} className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
                             <span className="text-sm font-medium text-foreground">{category}</span>
-                            <span className="bg-primary/10 text-primary px-2 py-0.5 rounded text-xs">{count}</span>
+                            <span className="bg-primary/10 text-foreground px-2 py-0.5 rounded text-xs">{count}</span>
                           </li>
                         ))}
                     </ul>
                   ) : (
                     <div className="text-center py-6">
-                      <p className="text-muted-foreground mb-3">No categories yet.</p>
+                      <p className="text-foreground mb-3">No categories yet.</p>
                       <Link href="/user/todos" className="inline-block bg-primary text-primary-foreground px-3 py-2 rounded-md text-sm hover:opacity-90 transition">
                         Add categories
                       </Link>
@@ -167,8 +167,8 @@ export default async function UserDashboard() {
 function MetricCard({ label, value }: { label: string; value: number | string }) {
   return (
     <div className="bg-card rounded-xl shadow-sm border p-6 text-center">
-      <p className="text-sm text-muted-foreground mb-2">{label}</p>
-      <p className="text-3xl font-bold text-card-foreground">{value}</p>
+      <p className="text-sm text-foreground mb-2">{label}</p>
+      <p className="text-3xl font-bold text-foreground">{value}</p>
     </div>
   );
 }
