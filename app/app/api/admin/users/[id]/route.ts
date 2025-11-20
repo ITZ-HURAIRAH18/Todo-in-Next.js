@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -18,7 +18,8 @@ export async function DELETE(
       );
     }
 
-    const userId = params.id;
+    const resolvedParams = await Promise.resolve(params);
+    const userId = resolvedParams.id;
 
     // Prevent admin from deleting themselves
     if (session.user.id === userId) {
