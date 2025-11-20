@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 export default async function AdminUsersPage() {
   const users = await prisma.user.findMany({
     include: { todos: true },
+    where: { role: "USER" },
   });
 
   return (
