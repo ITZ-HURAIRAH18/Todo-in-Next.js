@@ -18,6 +18,44 @@ export async function PATCH(req: Request, { params }: { params: any }) {
   if (body.category !== undefined) data.category = body.category;
 
   try {
+    // Check if user owns the todo
+    const todo = await prisma.todo.findUnique({
+      where: { id },
+      select: { userId: true }
+    });
+
+    if (!todo) {
+      return new Response("Todo not found", { status: 404 });
+    }
+
+    const isOwner = todo.userId === session.user.id;
+    
+    // If not owner, check if user has edit permission through sharing
+    let hasEditPermission = isOwner;
+    
+    if (!isOwner) {
+      try {
+        const sharedTodoModel = (prisma as any).sharedTodo;
+        if (sharedTodoModel) {
+          const sharedTodo = await sharedTodoModel.findUnique({
+            where: {
+              todoId_userId: {
+                todoId: id,
+                userId: session.user.id,
+              },
+            },
+          });
+          hasEditPermission = sharedTodo?.canEdit === true;
+        }
+      } catch (error) {
+        console.error("Error checking shared permissions:", error);
+      }
+    }
+
+    if (!hasEditPermission) {
+      return new Response("You don't have permission to edit this todo", { status: 403 });
+    }
+
     const updatedTodo = await prisma.todo.update({
       where: { id },
       data,
@@ -37,6 +75,20 @@ export async function DELETE(req: Request, { params }: { params: any }) {
   if (!session?.user?.id) return new Response("Unauthorized", { status: 401 });
 
   try {
+    // Only the owner can delete a todo
+    const todo = await prisma.todo.findUnique({
+      where: { id },
+      select: { userId: true }
+    });
+
+    if (!todo) {
+      return new Response("Todo not found", { status: 404 });
+    }
+
+    if (todo.userId !== session.user.id) {
+      return new Response("Only the owner can delete this todo", { status: 403 });
+    }
+
     const deletedTodo = await prisma.todo.update({
       where: { id },
       data: { deleted: true },

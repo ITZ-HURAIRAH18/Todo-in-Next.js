@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import TodoForm from "@/components/TodoForm";
 import TodoDisplay from "@/components/TodoDisplay";
+import SharedTodoDisplay from "@/components/SharedTodoDisplay";
 import Navbar from "@/components/Navbar";
 import prisma from "@/lib/prisma";
 
@@ -79,61 +80,7 @@ export default async function TodosPage() {
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-bold text-foreground">🔗 Shared with Me ({sharedTodos.length})</h3>
               </div>
-              <div className="space-y-4">
-                {sharedTodos.map((todo) => (
-                  <div key={todo.id} className="relative overflow-hidden rounded-xl p-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 animate-pulse" style={{animationDuration: '4s'}}>
-                    <div className="bg-background rounded-lg h-full">
-                      <div className="bg-card rounded-lg border p-6">
-                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                          {/* Todo Info */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className={`text-xl font-semibold ${todo.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
-                                {todo.title}
-                              </h3>
-                              <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                todo.completed
-                                  ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200"
-                                  : "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200"
-                              }`}>
-                                {todo.completed ? "✓ Completed" : "○ Pending"}
-                              </span>
-                            </div>
-                            {todo.description && (
-                              <p className={`text-sm text-muted-foreground mt-1 ${todo.completed ? 'line-through' : ''}`}>
-                                {todo.description}
-                              </p>
-                            )}
-                            <div className="flex flex-wrap items-center gap-3 mt-3">
-                              {todo.category && (
-                                <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
-                                  📂 {todo.category}
-                                </span>
-                              )}
-                              <span className="text-xs text-muted-foreground">
-                                👤 Shared by: <span className="font-medium text-foreground">{todo.sharedBy?.name || todo.sharedBy?.email}</span>
-                              </span>
-                              <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
-                                {todo.canEdit ? "✏️ Can Edit" : "👁️ View Only"}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Date Info */}
-                          <div className="text-right">
-                            <p className="text-xs text-muted-foreground">
-                              Created: {new Date(todo.createdAt).toLocaleDateString()}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Updated: {new Date(todo.updatedAt).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <SharedTodoDisplay todos={sharedTodos} />
             </div>
           )}
         </div>
