@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ShareTodoModal from "./ShareTodoModal";
 
 type Todo = {
   id: string;
@@ -23,6 +24,8 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editCategory, setEditCategory] = useState("");
+  const [sharingTodoId, setSharingTodoId] = useState<string | null>(null);
+  const [sharingTodoTitle, setSharingTodoTitle] = useState("");
 
   const refreshTodos = async () => {
     // Refresh the server component to fetch fresh data
@@ -115,6 +118,16 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
     }
   };
 
+  const openShareModal = (todoId: string, todoTitle: string) => {
+    setSharingTodoId(todoId);
+    setSharingTodoTitle(todoTitle);
+  };
+
+  const closeShareModal = () => {
+    setSharingTodoId(null);
+    setSharingTodoTitle("");
+  };
+
   if (todos.length === 0) {
     return (
       <p className="text-muted-foreground text-center py-8">
@@ -124,8 +137,16 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
   }
 
   return (
-    <div className="space-y-3">
-      {todos.map((todo) => (
+    <>
+      {sharingTodoId && (
+        <ShareTodoModal
+          todoId={sharingTodoId}
+          todoTitle={sharingTodoTitle}
+          onClose={closeShareModal}
+        />
+      )}
+      <div className="space-y-3">
+        {todos.map((todo) => (
         <div key={todo.id} className="bg-card border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
           {editingId === todo.id ? (
             /* Edit Mode - Compact */
@@ -224,6 +245,12 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
                   Edit
                 </button>
                 <button
+                  onClick={() => openShareModal(todo.id, todo.title)}
+                  className="px-3 py-1 bg-blue-500 text-white rounded text-xs font-medium hover:bg-blue-600 transition-colors"
+                >
+                  🔗 Share
+                </button>
+                <button
                   onClick={() => deleteTodo(todo.id)}
                   className="px-3 py-1 bg-destructive text-destructive-foreground rounded text-xs font-medium hover:bg-destructive/90 transition-colors"
                 >
@@ -233,7 +260,8 @@ export default function TodoDisplay({ todos }: TodoDisplayProps) {
             </div>
           )}
         </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }

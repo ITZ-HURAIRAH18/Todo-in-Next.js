@@ -14,6 +14,7 @@ model User {
   password  String
   role      Role     @default(USER)
   todos     Todo[]
+  sharedTodos SharedTodo[]
   createdAt DateTime @default(now())
 }
 
@@ -26,8 +27,21 @@ model Todo {
   deleted    Boolean  @default(false) // soft delete
   user       User     @relation(fields: [userId], references: [id])
   userId     String
+  sharedWith SharedTodo[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model SharedTodo {
+  id        String   @id @default(cuid())
+  todo      Todo     @relation(fields: [todoId], references: [id], onDelete: Cascade)
+  todoId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  canEdit   Boolean  @default(false)
+  sharedAt  DateTime @default(now())
+
+  @@unique([todoId, userId])
 }
 
 enum Role {
