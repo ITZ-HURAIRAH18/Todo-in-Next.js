@@ -91,7 +91,7 @@ export default async function UserDashboard() {
                 <div className="bg-card rounded-lg shadow-sm border p-6 h-full flex flex-col">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold text-foreground">Recent Todos</h3>
-                    <Link href="/todos" className="text-sm text-primary hover:underline">View all →</Link>
+                    <Link href="/user/todos" className="text-sm text-primary hover:underline">View all →</Link>
                   </div>
                   {recentTodos.length ? (
                     <ul className="space-y-3 flex-grow">

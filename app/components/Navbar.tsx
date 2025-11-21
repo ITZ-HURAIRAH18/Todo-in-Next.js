@@ -45,7 +45,7 @@ export default function Navbar({ user }: NavbarProps) {
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <div className="flex items-center">
-            <Link href="/dashboard" className="text-xl font-bold text-foreground">
+            <Link href="/user/dashboard" className="text-xl font-bold text-foreground">
                TodoApp
             </Link>
           </div>
